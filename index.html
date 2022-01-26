@@ -1,0 +1,50 @@
+<html>
+  <head>
+    <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+    <script src="https://unpkg.com/aframe-event-set-component@3.0.3/dist/aframe-event-set-component.min.js"></script>
+    <script>
+      AFRAME.registerComponent('control-a-ball', {
+        init: function () {
+          var el = this.el;
+          var ball = document.querySelector("#ball");
+          el.addEventListener('mouseenter', function () {
+            console.log("enter")
+            // ball.setAttribute('visible', "true");
+            
+            ball.emit("moveIn");
+          });
+    
+          el.addEventListener('mouseleave', function () {
+            console.log("leave")
+            ball.emit("moveOut");
+            // ball.setAttribute('visible', "false");
+          });
+
+          el.addEventListener('mousedown', function () {
+            console.log("down");
+          
+          });
+        }
+      });
+    </script>
+  </head>
+  <body>
+    <a-scene>
+        <a-box position="-1 0.5 -3" rotation="0 0 0" color="#4CC3D9" 
+          depth="0.1" height="2" width="1"
+          animation__mouseenter="property: rotation; to: 0 60 0; startEvents: mouseenter; dur: 500"
+          animation__mouseleave="property: rotation; to: 0 0 0; startEvents: mouseleave; dur: 500"
+          control-a-ball></a-box>
+        <a-sphere position="-1.5 0.6 -5" id = "ball" radius="0.5" color="#ada333"
+          animation__ballmoveIn="property: position; to: -5 0.6 -5; startEvents:moveIn; dur: 500" 
+          animation__ballmoveOut="property: position; to: -1.5 0.6 -5; startEvents:moveOut; dur: 500" 
+        ></a-sphere>
+          
+        
+
+        <a-camera>
+            <a-cursor></a-cursor>
+        </a-camera>
+    </a-scene>
+  </body>
+</html>
