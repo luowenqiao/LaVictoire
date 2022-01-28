@@ -3,45 +3,82 @@
     <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
     <script src="https://unpkg.com/aframe-event-set-component@3.0.3/dist/aframe-event-set-component.min.js"></script>
     <script>
-      AFRAME.registerComponent('control-a-ball', {
+      AFRAME.registerComponent('control-the-cloud', {
         init: function () {
           var el = this.el;
-          var ball = document.querySelector("#ball");
+          var cloud = document.querySelector("#cloud");
+
+          // execute when mouse hover on the door
           el.addEventListener('mouseenter', function () {
-            console.log("enter")
-            // ball.setAttribute('visible', "true");
-            
-            ball.emit("moveIn");
-          });
-    
-          el.addEventListener('mouseleave', function () {
-            console.log("leave")
-            ball.emit("moveOut");
-            // ball.setAttribute('visible', "false");
+            //cloud.setAttribute('visible', "true");
+            cloud.emit("moveIn");
+            cloud.emit("sizeIn");
           });
 
-          el.addEventListener('mousedown', function () {
-            console.log("down");
-          
+          // execute when mouse leaves the door
+          el.addEventListener('mouseleave', function () {
+            //cloud.setAttribute('visible', "false");
+            cloud.emit("moveOut");
+            cloud.emit("sizeOut");
           });
+          
+          // execute when mouse click
+          // el.addEventListener('mousedown', function () {
+          //   console.log("down");
+          // });
         }
       });
     </script>
   </head>
   <body>
     <a-scene>
-        <a-box position="-1 0.5 -3" rotation="0 0 0" color="#4CC3D9" 
-          depth="0.1" height="2" width="1"
-          animation__mouseenter="property: rotation; to: 0 60 0; startEvents: mouseenter; dur: 500"
-          animation__mouseleave="property: rotation; to: 0 0 0; startEvents: mouseleave; dur: 500"
-          control-a-ball></a-box>
-        <a-sphere position="-1.5 0.6 -5" id = "ball" radius="0.5" color="#ada333"
-          animation__ballmoveIn="property: position; to: -5 0.6 -5; startEvents:moveIn; dur: 500" 
-          animation__ballmoveOut="property: position; to: -1.5 0.6 -5; startEvents:moveOut; dur: 500" 
-        ></a-sphere>
-          
-        
+        <!-- gltf models -->
+        <a-assets>
+          <!-- sky 360 degree image -->
+          <img id="sky" src="/assets/sky.jpg">
+          <!-- cloud model -->
+          <a-asset-item id="cloud-obj" src="/assets/cloud/cloud.obj"></a-asset-item>
+          <a-asset-item id="cloud-mtl" src="/assets/cloud/cloud.mtl"></a-asset-item>
+          <!-- door models -->
+          <a-asset-item id="door-obj" src="/assets/door2/doortest.obj"></a-asset-item>
+          <a-asset-item id="door-mtl" src="/assets/door2/doortest.mtl"></a-asset-item>
+          <a-asset-item id="frame-obj" src="/assets/frame/FRAME.obj"></a-asset-item>
+          <a-asset-item id="frame-mtl" src="/assets/frame/FRAME.mtl"></a-asset-item>
+          <!-- sand plane -->
+          <a-asset-item id="sandModel" src="/assets/sand/scene.gltf"></a-asset-item>
+        </a-assets>
 
+        <!-- cloud -->
+        <a-obj-model src="#cloud-obj" mtl="#cloud-mtl" id="cloud"
+          position="2 2 -5.5" rotation="0 60 0" scale="0.0 0.0 0.0"
+          animation__cloudMoveIn="property: position; to: 0 2 -5.5; startEvents:moveIn; dur: 500"
+          animation__cloudSizeIn="property: scale; frome:0.0 0.0 0.0;to: 0.007 0.007 0.007; startEvents:sizeIn; dur: 500"
+          animation__cloudMoveOut="property: position; to: 2 2 -5.5; startEvents:moveOut; dur: 500" 
+          animation__cloudSizeOut="property: scale; frome:0.007 0.007 0.007;to: 0.0 0.0 0.0; startEvents:sizeOut; dur: 500"
+        ></a-obj-model>
+
+        <!-- door -->
+        <!-- door -->
+        <a-obj-model src="#door-obj" mtl="#door-mtl" 
+          position="3.3 1 -5" rotation="0 90 0" scale="0.06 0.06 0.06" 
+          animation__mouseenter="property: rotation; to: 0 120 0; startEvents: mouseenter; dur: 500"
+          animation__mouseleave="property: rotation; to: 0 90 0; startEvents: mouseleave; dur: 500"
+          control-the-cloud
+        ></a-obj-model>
+        <!-- door frame -->
+        <a-obj-model src="#frame-obj" mtl="#frame-mtl" 
+          position="2 1 -5" rotation="0 -90 0" scale="0.06 0.06 0.06" 
+        ></a-obj-model>
+
+        <!-- sky -->
+        <a-sky src="#sky"></a-sky>
+
+         <!-- sand -->
+        <a-entity gltf-model="#sandModel" id="sand" 
+         position="10 -5 -1" rotation="0 20 0" scale="10 10 10"
+        ></a-entity>
+
+        <!-- cursor -->
         <a-camera>
             <a-cursor></a-cursor>
         </a-camera>
